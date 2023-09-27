@@ -96,8 +96,8 @@ Prior to your first deployment, you'll need to do a few things:
 - Create two apps on Fly, one for staging and one for production:
 
   ```sh
-  fly apps create music-recs-0fa0
-  fly apps create music-recs-0fa0-staging
+  fly apps create my-billboard-charts-0fa0
+  fly apps create my-billboard-charts-0fa0-staging
   ```
 
   > **Note:** Once you've successfully created an app, double-check the `fly.toml` file to ensure that the `app` key is the name of the production app you created. This Stack [automatically appends a unique suffix at init](https://github.com/remix-run/blues-stack/blob/4c2f1af416b539187beb8126dd16f6bc38f47639/remix.init/index.js#L29) which may not match the apps you created on Fly. You will likely see [404 errors in your Github Actions CI logs](https://community.fly.io/t/404-failure-with-deployment-with-remix-blues-stack/4526/3) if you have this mismatch.
@@ -119,14 +119,14 @@ Prior to your first deployment, you'll need to do a few things:
 - Add a `SESSION_SECRET` to your fly app secrets, to do this you can run the following commands:
 
   ```sh
-  fly secrets set SESSION_SECRET=$(openssl rand -hex 32) --app music-recs-0fa0
-  fly secrets set SESSION_SECRET=$(openssl rand -hex 32) --app music-recs-0fa0-staging
+  fly secrets set SESSION_SECRET=$(openssl rand -hex 32) --app my-billboard-charts-0fa0
+  fly secrets set SESSION_SECRET=$(openssl rand -hex 32) --app my-billboard-charts-0fa0-staging
   ```
 
   > **Note:** When creating the staging secret, you may get a warning from the Fly CLI that looks like this:
   >
   > ```
-  > WARN app flag 'music-recs-0fa0-staging' does not match app name in config file 'music-recs-0fa0'
+  > WARN app flag 'my-billboard-charts-0fa0-staging' does not match app name in config file 'my-billboard-charts-0fa0'
   > ```
   >
   > This simply means that the current directory contains a config that references the production app we created in the first step. Ignore this warning and proceed to create the secret.
@@ -136,11 +136,11 @@ Prior to your first deployment, you'll need to do a few things:
 - Create a database for both your staging and production environments. Run the following:
 
   ```sh
-  fly postgres create --name music-recs-0fa0-db
-  fly postgres attach --app music-recs-0fa0 music-recs-0fa0-db
+  fly postgres create --name my-billboard-charts-0fa0-db
+  fly postgres attach --app my-billboard-charts-0fa0 my-billboard-charts-0fa0-db
 
-  fly postgres create --name music-recs-0fa0-staging-db
-  fly postgres attach --app music-recs-0fa0-staging music-recs-0fa0-staging-db
+  fly postgres create --name my-billboard-charts-0fa0-staging-db
+  fly postgres attach --app my-billboard-charts-0fa0-staging my-billboard-charts-0fa0-staging-db
   ```
 
   > **Note:** You'll get the same warning for the same reason when attaching the staging database that you did in the `fly set secret` step above. No worries. Proceed!

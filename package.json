@@ -1,11 +1,12 @@
 {
-  "name": "music-recs-0fa0",
+  "name": "my-billboard-charts-0fa0",
   "private": true,
   "sideEffects": false,
   "scripts": {
     "build": "run-s build:*",
     "build:remix": "remix build",
     "build:server": "esbuild --platform=node --format=cjs ./server.ts --outdir=build --bundle",
+    "db:create-migration": "prisma migrate dev --name",
     "dev": "run-p dev:*",
     "dev:build": "cross-env NODE_ENV=development npm run build:server -- --watch",
     "dev:remix": "cross-env NODE_ENV=development remix watch",
@@ -32,7 +33,7 @@
   ],
   "dependencies": {
     "@isaacs/express-prometheus-middleware": "^1.2.1",
-    "@prisma/client": "^4.16.1",
+    "@prisma/client": "^5.3.1",
     "@remix-run/css-bundle": "^1.19.1",
     "@remix-run/express": "^1.19.1",
     "@remix-run/node": "^1.19.1",
@@ -78,7 +79,7 @@
     "postcss": "^8.4.24",
     "prettier": "^2.8.8",
     "prettier-plugin-tailwindcss": "^0.3.0",
-    "prisma": "^4.16.1",
+    "prisma": "^5.3.1",
     "start-server-and-test": "^2.0.0",
     "tailwindcss": "^3.3.2",
     "ts-node": "^10.9.1",

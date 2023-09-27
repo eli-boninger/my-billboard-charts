@@ -28,6 +28,18 @@ export async function createUser(email: User["email"], password: string) {
   });
 }
 
+export async function addUserSpotifyAuth(userId: User["id"], spotifyRefreshToken: string) {
+  return prisma.user.update({
+    where: {
+      id: userId
+    },
+    data: {
+      spotifyAuthorized: true,
+      spotifyRefreshToken
+    }
+  });
+}
+
 export async function deleteUserByEmail(email: User["email"]) {
   return prisma.user.delete({ where: { email } });
 }
