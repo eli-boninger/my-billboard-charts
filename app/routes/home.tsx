@@ -1,7 +1,8 @@
-import { json, redirect, type V2_MetaFunction } from "@remix-run/node";
-import { Form, Link, useLoaderData } from "@remix-run/react";
+import { redirect, type V2_MetaFunction } from "@remix-run/node";
+import { Form, useLoaderData } from "@remix-run/react";
 import crypto from "crypto";
-import { getSession } from "~/session.server";
+import TopTabs from "~/components/home/TopTabs";
+import { getTopArtists, getTopSongs } from "~/services/spotifyService";
 import { useOptionalUser } from "~/utils";
 
 export const meta: V2_MetaFunction = () => [{ title: "My Billboard Charts" }];
@@ -19,20 +20,15 @@ export const action = () => {
   );
 };
 
-export const loader = async ({ request }) => {
-  const session = await getSession(request);
-  const res = await fetch("https://api.spotify.com/v1/me/top/artists", {
-    headers: {
-      Authorization: `Bearer ${session.get("spotify")}`,
-    },
-  });
-  const jsonResult = await res.json();
-  return json({ topTracks: jsonResult?.items });
+export const loader = async ({ request }: { request: Request }) => {
+  const songs = await getTopSongs(request);
+  const artists = await getTopArtists(request);
+  return { songs, artists };
 };
 
-export default function Home() {
+export default function Index() {
   const user = useOptionalUser();
-  const data = useLoaderData<typeof loader>();
+  const { songs, artists } = useLoaderData<typeof loader>();
   return (
     <>
       <h1>My billboard charts</h1>
@@ -41,9 +37,7 @@ export default function Home() {
           <button type="submit">Authorize spotify</button>
         </Form>
       )}
-      {data.topTracks.map((t) => (
-        <p key={t.id}>{t.name}</p>
-      ))}
+      <TopTabs topTracks={songs!} topArtists={artists!} />
     </>
   );
 }

@@ -1,4 +1,4 @@
-import { createCookieSessionStorage, redirect } from "@remix-run/node";
+import { createCookieSessionStorage, json, redirect } from "@remix-run/node";
 import invariant from "tiny-invariant";
 
 import type { User } from "~/models/user.server";
@@ -18,6 +18,7 @@ export const sessionStorage = createCookieSessionStorage({
 });
 
 const USER_SESSION_KEY = "userId";
+const SPOTIFY_SESSION_KEY = "spotifySession";
 
 export async function getSession(request: Request) {
   const cookie = request.headers.get("Cookie");
@@ -40,6 +41,21 @@ export async function getUser(request: Request) {
   if (user) return user;
 
   throw await logout(request);
+}
+
+export async function getSpotifySession(request: Request) {
+  const session = await getSession(request);
+  return session.get(SPOTIFY_SESSION_KEY);
+}
+
+export async function addSpotifyTokenToSession(request: Request, token: string, redirectUrl?: string) {
+  const session = await getSession(request);
+  session.set(SPOTIFY_SESSION_KEY, token);
+  if (redirectUrl) {
+    return redirect(redirectUrl, {headers: { "Set-Cookie": await sessionStorage.commitSession(session)}})
+  }
+  return json(token, { headers: { "Set-Cookie": await sessionStorage.commitSession(session) }})
+  
 }
 
 export async function requireUserId(
