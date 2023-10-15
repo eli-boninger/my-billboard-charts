@@ -4,7 +4,7 @@ import invariant from "tiny-invariant";
 import type { User } from "~/models/user.server";
 import { getUserById } from "~/models/user.server";
 
-invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
+// invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
 
 export const sessionStorage = createCookieSessionStorage({
   cookie: {
@@ -50,11 +50,14 @@ export async function getSpotifySession(request: Request) {
 
 export async function addSpotifyTokenToSession(request: Request, token: string, redirectUrl?: string) {
   const session = await getSession(request);
+  session.unset(SPOTIFY_SESSION_KEY);
+  await sessionStorage.commitSession(session);
   session.set(SPOTIFY_SESSION_KEY, token);
   if (redirectUrl) {
-    return redirect(redirectUrl, {headers: { "Set-Cookie": await sessionStorage.commitSession(session)}})
+    return redirect(redirectUrl, { headers: { "Set-Cookie": await sessionStorage.commitSession(session)}})
   }
-  return json(token, { headers: { "Set-Cookie": await sessionStorage.commitSession(session) }})
+
+  await sessionStorage.commitSession(session);
   
 }
 

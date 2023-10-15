@@ -8,15 +8,18 @@ generator client {
 }
 
 model User {
-  id    String @id @default(cuid())
-  email String @unique
-  spotifyAuthorized Boolean @default(false)
-  spotifyRefreshToken String @default("")
+  id                  String  @id @default(cuid())
+  email               String  @unique
+  spotifyAuthorized   Boolean @default(false)
+  spotifyRefreshToken String  @default("")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   password Password?
+
+  lastUpdateJob DateTime?
+  topItems      TopItem[]
 }
 
 model Password {
@@ -24,4 +27,29 @@ model Password {
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String @unique
+}
+
+enum TopItemType {
+  ARTIST
+  SONG
+}
+
+model TopItem {
+  id                String        @id @default(cuid())
+  name              String
+  type              TopItemType
+  user              User          @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId            String
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  isCurrentlyRanked Boolean       @default(true)
+  topItemRanks      TopItemRank[]
+}
+
+model TopItemRank {
+  id        String   @id @default(cuid())
+  topItem   TopItem  @relation(fields: [topItemId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  topItemId String
+  rank      Int
+  createdAt DateTime @default(now())
 }

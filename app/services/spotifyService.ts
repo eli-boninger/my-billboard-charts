@@ -1,4 +1,6 @@
+import { TopItem } from "@prisma/client";
 import { SpotifyTopItemsRequestResult } from "~/models/spotifyApiModels";
+import { getTopArtistsByUserId, getTopSongsByUserId, setTopArtistsByUserId, setTopSongsByUserId } from "~/models/topItem.server";
 import { addSpotifyTokenToSession, getSpotifySession, requireUser } from "~/session.server";
 
 const refreshAccessToken = async (request: Request) => {
@@ -25,6 +27,7 @@ const refreshAccessToken = async (request: Request) => {
         if (res.status === 200) {
             const resultJson = await res.json();
             await addSpotifyTokenToSession(request, resultJson?.access_token)
+            return resultJson?.access_token;
         }
     } catch (e) {
         console.error(e)
@@ -37,8 +40,8 @@ export const spotifyApiRequest = async <T>(request: Request, url: string, method
     try {
         const res = await fetch(url, { method, body, headers: { Authorization: `Bearer ${spotifyAuthToken}`, }})
         if (res.status === 401) {
-            await refreshAccessToken(request);
-            const refreshedResult = await fetch(url, { method, body, headers: { Authorization: `Bearer ${spotifyAuthToken}`, }})
+            const refreshedToken = await refreshAccessToken(request);
+            const refreshedResult = await fetch(url, { method, body, headers: { Authorization: `Bearer ${refreshedToken}`, }})
             if (refreshedResult.status === 400) {
                 throw new Error("something went wrong")
             }
@@ -51,11 +54,31 @@ export const spotifyApiRequest = async <T>(request: Request, url: string, method
     }
 }
 
-export const getTopSongs = async (request: Request) => {
-    return await spotifyApiRequest<SpotifyTopItemsRequestResult>(request, "https://api.spotify.com/v1/me/top/tracks?time_range=short_term");
+export const getTopSongs = async (request: Request, userId: string): Promise<TopItem[]> => {
+    const songs = await getTopSongsByUserId(userId);
+    if (!!songs && songs.length > 0) {
+        return songs;
+    }
+    const res = await spotifyApiRequest<SpotifyTopItemsRequestResult>(request, "https://api.spotify.com/v1/me/top/tracks?time_range=short_term");
+    if (!!res?.items) {
+        await setTopSongsByUserId(res.items, userId)
+        return await getTopSongsByUserId(userId)
+    } else {
+        return [];
+    }
+    
 }
 
-export const getTopArtists = async (request: Request) => {
-    return await spotifyApiRequest<SpotifyTopItemsRequestResult>(request, "https://api.spotify.com/v1/me/top/artists?time_range=short_term");
-
+export const getTopArtists = async (request: Request, userId: string) => {
+    const artists = await getTopArtistsByUserId(userId);
+    if (!!artists && artists.length > 0) {
+        return artists;
+    }
+    const res = await spotifyApiRequest<SpotifyTopItemsRequestResult>(request, "https://api.spotify.com/v1/me/top/artists?time_range=short_term");
+    if (!!res?.items) {
+        await setTopArtistsByUserId(res.items, userId)
+        return await getTopArtistsByUserId(userId)
+    } else {
+        return []
+    }
 }

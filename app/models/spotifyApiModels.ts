@@ -13,7 +13,7 @@ interface SpotifyImage {
     width: number;
 }
 
-interface SpotifyTopResultItem {
+export interface SpotifyTopResultItem {
     externalUrls: SpotifyExternalUrls;
     followers: SpotifyFollowers;
     genres: string[];

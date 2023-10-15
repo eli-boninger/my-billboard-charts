@@ -3,6 +3,7 @@ import { Form, useLoaderData } from "@remix-run/react";
 import crypto from "crypto";
 import TopTabs from "~/components/home/TopTabs";
 import { getTopArtists, getTopSongs } from "~/services/spotifyService";
+import { requireUserId } from "~/session.server";
 import { useOptionalUser } from "~/utils";
 
 export const meta: V2_MetaFunction = () => [{ title: "My Billboard Charts" }];
@@ -21,8 +22,9 @@ export const action = () => {
 };
 
 export const loader = async ({ request }: { request: Request }) => {
-  const songs = await getTopSongs(request);
-  const artists = await getTopArtists(request);
+  const userId = await requireUserId(request);
+  const songs = await getTopSongs(request, userId);
+  const artists = await getTopArtists(request, userId);
   return { songs, artists };
 };
 
@@ -37,7 +39,7 @@ export default function Index() {
           <button type="submit">Authorize spotify</button>
         </Form>
       )}
-      <TopTabs topTracks={songs!} topArtists={artists!} />
+      <TopTabs topTracks={songs} topArtists={artists} />
     </>
   );
 }
