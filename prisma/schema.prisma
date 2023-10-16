@@ -36,6 +36,7 @@ enum TopItemType {
 
 model TopItem {
   id                String        @id @default(cuid())
+  spotifyId         String
   name              String
   type              TopItemType
   user              User          @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -44,6 +45,8 @@ model TopItem {
   updatedAt         DateTime      @updatedAt
   isCurrentlyRanked Boolean       @default(true)
   topItemRanks      TopItemRank[]
+
+  @@unique([spotifyId, userId])
 }
 
 model TopItemRank {
