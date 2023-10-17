@@ -2,7 +2,7 @@ import * as React from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import { TopItem } from "@prisma/client";
+import { TopTrack, TopArtist } from "@prisma/client";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -11,8 +11,8 @@ interface TabPanelProps {
 }
 
 interface Props {
-  topTracks: TopItem[];
-  topArtists: TopItem[];
+  topTracks: TopTrack[];
+  topArtists: TopArtist[];
 }
 
 function CustomTabPanel(props: TabPanelProps) {
@@ -54,7 +54,7 @@ export default function TopTabs(props: Props) {
           onChange={handleChange}
           aria-label="Billboard charts tabs"
         >
-          <Tab label="Songs" {...a11yProps(0)} />
+          <Tab label="Tracks" {...a11yProps(0)} />
           <Tab label="Artists" {...a11yProps(1)} />
         </Tabs>
       </Box>

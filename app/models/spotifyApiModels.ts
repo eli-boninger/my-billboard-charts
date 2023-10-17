@@ -13,6 +13,14 @@ interface SpotifyImage {
     width: number;
 }
 
+interface SpotifyAlbum {
+    name: string;
+}
+
+interface SpotifyArtist {
+    name: string;
+}
+
 export interface SpotifyTopResultItem {
     externalUrls: SpotifyExternalUrls;
     followers: SpotifyFollowers;
@@ -24,6 +32,8 @@ export interface SpotifyTopResultItem {
     popularity: number;
     type: string;
     uri: string;
+    album?: SpotifyAlbum;
+    artists?: SpotifyArtist[];
 }
 
 export interface SpotifyTopItemsRequestResult {

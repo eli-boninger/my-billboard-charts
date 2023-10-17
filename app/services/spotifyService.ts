@@ -1,6 +1,7 @@
-import { TopItem } from "@prisma/client";
+import { TopArtist, TopTrack } from "@prisma/client";
 import { SpotifyTopItemsRequestResult } from "~/models/spotifyApiModels";
-import { getTopArtistsByUserId, getTopSongsByUserId, setTopArtistsByUserId, setTopSongsByUserId } from "~/models/topItem.server";
+import { getTopArtistsByUserId, setTopArtistsByUserId } from "~/models/topArtist.server";
+import { getTopTracksByUserId, setTopTracksByUserId } from "~/models/topTrack.server";
 import { addSpotifyTokenToSession, getSpotifySession, requireUser } from "~/session.server";
 
 const refreshAccessToken = async (request: Request) => {
@@ -54,22 +55,22 @@ export const spotifyApiRequest = async <T>(request: Request, url: string, method
     }
 }
 
-export const getTopSongs = async (request: Request, userId: string): Promise<TopItem[]> => {
-    const songs = await getTopSongsByUserId(userId);
-    if (!!songs && songs.length > 0) {
-        return songs;
+export const getTopTracks = async (request: Request, userId: string): Promise<TopTrack[]> => {
+    const tracks = await getTopTracksByUserId(userId);
+    if (!!tracks && tracks.length > 0) {
+        return tracks;
     }
     const res = await spotifyApiRequest<SpotifyTopItemsRequestResult>(request, "https://api.spotify.com/v1/me/top/tracks?time_range=short_term");
     if (!!res?.items) {
-        await setTopSongsByUserId(res.items, userId)
-        return await getTopSongsByUserId(userId)
+        await setTopTracksByUserId(res.items, userId)
+        return await getTopTracksByUserId(userId)
     } else {
         return [];
     }
     
 }
 
-export const getTopArtists = async (request: Request, userId: string) => {
+export const getTopArtists = async (request: Request, userId: string): Promise<TopArtist[]> => {
     const artists = await getTopArtistsByUserId(userId);
     if (!!artists && artists.length > 0) {
         return artists;
