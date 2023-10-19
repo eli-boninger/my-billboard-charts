@@ -1,7 +1,7 @@
 import { TopArtist, TopTrack } from "@prisma/client";
 import { SpotifyTopItemsRequestResult } from "~/models/spotifyApiModels";
-import { getTopArtistsByUserId, setTopArtistsByUserId } from "~/models/topArtist.server";
-import { getTopTracksByUserId, setTopTracksByUserId } from "~/models/topTrack.server";
+import { getTopArtistsByUserId} from "~/models/topArtist.server";
+import { getTopTracksByUserId } from "~/models/topTrack.server";
 import { addSpotifyTokenToSession, getSpotifySession, requireUser } from "~/session.server";
 
 const refreshAccessToken = async (request: Request) => {
@@ -60,13 +60,13 @@ export const getTopTracks = async (request: Request, userId: string): Promise<To
     if (!!tracks && tracks.length > 0) {
         return tracks;
     }
-    const res = await spotifyApiRequest<SpotifyTopItemsRequestResult>(request, "https://api.spotify.com/v1/me/top/tracks?time_range=short_term");
-    if (!!res?.items) {
-        await setTopTracksByUserId(res.items, userId)
-        return await getTopTracksByUserId(userId)
-    } else {
-        return [];
-    }
+    // const res = await spotifyApiRequest<SpotifyTopItemsRequestResult>(request, "https://api.spotify.com/v1/me/top/tracks?time_range=short_term");
+    // if (!!res?.items) {
+        // await setTopTracksByUserId(res.items, userId)
+        // return await getTopTracksByUserId(userId)
+    // } else {
+        // return [];
+    // }
     
 }
 
@@ -75,11 +75,11 @@ export const getTopArtists = async (request: Request, userId: string): Promise<T
     if (!!artists && artists.length > 0) {
         return artists;
     }
-    const res = await spotifyApiRequest<SpotifyTopItemsRequestResult>(request, "https://api.spotify.com/v1/me/top/artists?time_range=short_term");
-    if (!!res?.items) {
-        await setTopArtistsByUserId(res.items, userId)
-        return await getTopArtistsByUserId(userId)
-    } else {
-        return []
-    }
+    // const res = await spotifyApiRequest<SpotifyTopItemsRequestResult>(request, "https://api.spotify.com/v1/me/top/artists?time_range=short_term");
+    // if (!!res?.items) {
+    //     await setTopArtistsByUserId(res.items, userId)
+    //     return await getTopArtistsByUserId(userId)
+    // } else {
+    //     return []
+    // }
 }

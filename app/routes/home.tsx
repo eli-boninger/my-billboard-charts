@@ -39,7 +39,18 @@ export default function Index() {
           <button type="submit">Authorize spotify</button>
         </Form>
       )}
-      <TopTabs topTracks={tracks} topArtists={artists} />
+      <TopTabs
+        topTracks={tracks.map((t) => ({
+          ...t,
+          createdAt: new Date(t.createdAt),
+          updatedAt: new Date(t.updatedAt),
+        }))}
+        topArtists={artists.map((t) => ({
+          ...t,
+          createdAt: new Date(t.createdAt),
+          updatedAt: new Date(t.updatedAt),
+        }))}
+      />
     </>
   );
 }

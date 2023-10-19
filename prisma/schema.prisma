@@ -45,11 +45,12 @@ model TopArtist {
 }
 
 model TopArtistRank {
-  id        String    @id @default(cuid())
-  topItem   TopArtist @relation(fields: [topItemId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  topItemId String
-  rank      Int
-  createdAt DateTime  @default(now())
+  id           String    @id @default(cuid())
+  topItem      TopArtist @relation(fields: [topItemId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  topItemId    String
+  rank         Int
+  previousRank Int?
+  createdAt    DateTime  @default(now())
 }
 
 model TopTrack {
@@ -69,9 +70,10 @@ model TopTrack {
 }
 
 model TopTrackRank {
-  id        String   @id @default(cuid())
-  topItem   TopTrack @relation(fields: [topItemId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  topItemId String
-  rank      Int
-  createdAt DateTime @default(now())
+  id           String   @id @default(cuid())
+  topItem      TopTrack @relation(fields: [topItemId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  topItemId    String
+  rank         Int
+  previousRank Int?
+  createdAt    DateTime @default(now())
 }

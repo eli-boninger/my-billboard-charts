@@ -5,6 +5,8 @@ import { createRequestHandler } from "@remix-run/express";
 import compression from "compression";
 import express from "express";
 import morgan from "morgan";
+import cron from "node-cron"
+import { updateTopItemsForAllUsers } from "~/tasks/updateTopItemsForAllUsers";
 
 const app = express();
 const metricsApp = express();
@@ -15,6 +17,8 @@ app.use(
     metricsApp,
   })
 );
+
+cron.schedule("*/30 * * * *", updateTopItemsForAllUsers);
 
 app.use((req, res, next) => {
   // helpful headers:
