@@ -19,8 +19,7 @@ model User {
   password Password?
 
   lastUpdateJob DateTime?
-  topTracks     TopTrack[]
-  topArtist     TopArtist[]
+  topItems      TopItem[]
 }
 
 model Password {
@@ -30,48 +29,31 @@ model Password {
   userId String @unique
 }
 
-model TopArtist {
-  id                String          @id @default(cuid())
+model TopItem {
+  id                String        @id @default(cuid())
   spotifyId         String
   name              String
-  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user              User          @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId            String
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
-  isCurrentlyRanked Boolean         @default(true)
-  topArtistRanks    TopArtistRank[]
-
-  @@unique([spotifyId, userId])
-}
-
-model TopArtistRank {
-  id           String    @id @default(cuid())
-  topItem      TopArtist @relation(fields: [topItemId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  topItemId    String
-  rank         Int
-  previousRank Int?
-  createdAt    DateTime  @default(now())
-}
-
-model TopTrack {
-  id                String         @id @default(cuid())
-  spotifyId         String
-  name              String
-  artists           String[]
-  user              User           @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId            String
-  createdAt         DateTime       @default(now())
-  updatedAt         DateTime       @updatedAt
-  isCurrentlyRanked Boolean        @default(true)
-  topTrackRanks     TopTrackRank[]
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  isCurrentlyRanked Boolean       @default(true)
+  topItemRanks      TopItemRank[]
+  topItemType       TopItemType
   album             String?
+  artists           String[]
 
-  @@unique([spotifyId, userId])
+  @@unique([spotifyId, userId, topItemType])
 }
 
-model TopTrackRank {
+enum TopItemType {
+  ARTIST
+  TRACK
+}
+
+model TopItemRank {
   id           String   @id @default(cuid())
-  topItem      TopTrack @relation(fields: [topItemId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  topItem      TopItem  @relation(fields: [topItemId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   topItemId    String
   rank         Int
   previousRank Int?

@@ -1,7 +1,5 @@
-import { TopArtist, TopTrack } from "@prisma/client";
-import { SpotifyTopItemsRequestResult } from "~/models/spotifyApiModels";
-import { getTopArtistsByUserId} from "~/models/topArtist.server";
-import { getTopTracksByUserId } from "~/models/topTrack.server";
+import { TopItemType } from "@prisma/client";
+import { TopItemAndRank, getTopItemsByUserId } from "~/models/topItem.server";
 import { addSpotifyTokenToSession, getSpotifySession, requireUser } from "~/session.server";
 
 const refreshAccessToken = async (request: Request) => {
@@ -55,11 +53,12 @@ export const spotifyApiRequest = async <T>(request: Request, url: string, method
     }
 }
 
-export const getTopTracks = async (request: Request, userId: string): Promise<TopTrack[]> => {
-    const tracks = await getTopTracksByUserId(userId);
+export const getTopTracks = async (request: Request, userId: string): Promise<TopItemAndRank[]> => {
+    const tracks = await getTopItemsByUserId(userId, TopItemType.TRACK);
     if (!!tracks && tracks.length > 0) {
         return tracks;
     }
+    return [];
     // const res = await spotifyApiRequest<SpotifyTopItemsRequestResult>(request, "https://api.spotify.com/v1/me/top/tracks?time_range=short_term");
     // if (!!res?.items) {
         // await setTopTracksByUserId(res.items, userId)
@@ -70,11 +69,12 @@ export const getTopTracks = async (request: Request, userId: string): Promise<To
     
 }
 
-export const getTopArtists = async (request: Request, userId: string): Promise<TopArtist[]> => {
-    const artists = await getTopArtistsByUserId(userId);
+export const getTopArtists = async (request: Request, userId: string): Promise<TopItemAndRank[]> => {
+    const artists = await getTopItemsByUserId(userId, TopItemType.ARTIST);
     if (!!artists && artists.length > 0) {
         return artists;
     }
+    return [];
     // const res = await spotifyApiRequest<SpotifyTopItemsRequestResult>(request, "https://api.spotify.com/v1/me/top/artists?time_range=short_term");
     // if (!!res?.items) {
     //     await setTopArtistsByUserId(res.items, userId)

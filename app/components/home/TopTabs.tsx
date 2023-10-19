@@ -2,7 +2,8 @@ import * as React from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import { TopTrack, TopArtist } from "@prisma/client";
+import { TopItemsList } from "./TopItemsList";
+import { TopItemAndRank } from "~/models/topItem.server";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -11,8 +12,8 @@ interface TabPanelProps {
 }
 
 interface Props {
-  topTracks: TopTrack[];
-  topArtists: TopArtist[];
+  topTracks: TopItemAndRank[];
+  topArtists: TopItemAndRank[];
 }
 
 function CustomTabPanel(props: TabPanelProps) {
@@ -59,14 +60,10 @@ export default function TopTabs(props: Props) {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        {topTracks.map((t) => (
-          <div key={t.id}>{t.name}</div>
-        ))}
+        <TopItemsList items={topTracks} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        {topArtists.map((t) => (
-          <div key={t.id}>{t.name}</div>
-        ))}
+        <TopItemsList items={topArtists} />
       </CustomTabPanel>
     </Box>
   );

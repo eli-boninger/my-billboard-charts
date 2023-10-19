@@ -1,6 +1,6 @@
+import { TopItemType } from "@prisma/client";
 import { SpotifyTopItemsRequestResult, SpotifyTopResultItem } from "~/models/spotifyApiModels";
-import { getTopArtistsByUserId, setAllArtistsUnranked, upsertTopArtist } from "~/models/topArtist.server";
-import { getTopTracksByUserId, setAllTracksUnranked, upsertTopTrack } from "~/models/topTrack.server";
+import { getTopItemsByUserId, setAllItemsUnranked, upsertTopItem } from "~/models/topItem.server";
 import { User, getAllSpotifyAuthorizedUsers } from "~/models/user.server"
 
 export const updateTopItemsForAllUsers = async () => {
@@ -39,10 +39,10 @@ const refreshAccessToken = async (refreshToken: User["spotifyRefreshToken"]) => 
 
 
 const updateAllUserTopItems = async (id: User["id"], refreshToken: User["spotifyRefreshToken"]) => {
-    const topTracks = await getTopTracksByUserId(id);
-    const topArtists = await getTopArtistsByUserId(id)
-    await setAllTracksUnranked(id);
-    await setAllArtistsUnranked(id)
+    const topTracks = await getTopItemsByUserId(id, TopItemType.TRACK);
+    const topArtists = await getTopItemsByUserId(id, TopItemType.ARTIST)
+    await setAllItemsUnranked(id, TopItemType.TRACK);
+    await setAllItemsUnranked(id, TopItemType.ARTIST)
 
     let newTracksList: SpotifyTopResultItem[] = []
     let newArtistsList: SpotifyTopResultItem[] = []
@@ -57,9 +57,9 @@ const updateAllUserTopItems = async (id: User["id"], refreshToken: User["spotify
     }
 
     newTracksList.forEach((t, index) => {
-        upsertTopTrack(t, index, id, topTracks.find(tt => tt.spotifyId === t.id)?.topTrackRanks[0]?.rank)
+        upsertTopItem(t, index, id, TopItemType.TRACK, topTracks.find(tt => tt.spotifyId === t.id)?.topItemRanks[0]?.rank)
     })
     newArtistsList.forEach((a, index) => {
-        upsertTopArtist(a, index, id, topArtists.find(ta => ta.spotifyId === a.id)?.topArtistRanks[0]?.rank)
+        upsertTopItem(a, index, id, TopItemType.ARTIST, topArtists.find(ta => ta.spotifyId === a.id)?.topItemRanks[0]?.rank)
     })
 }
