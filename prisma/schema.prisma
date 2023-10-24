@@ -10,52 +10,61 @@ generator client {
 model User {
   id                  String  @id @default(cuid())
   email               String  @unique
-  spotifyAuthorized   Boolean @default(false)
-  spotifyRefreshToken String  @default("")
+  spotifyAuthorized   Boolean @default(false) @map("spotify_authorized")
+  spotifyRefreshToken String  @default("") @map("spotify_refresh_token")
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   password Password?
 
-  lastUpdateJob DateTime?
+  lastUpdateJob DateTime? @map("last_update_job")
   topItems      TopItem[]
+
+  @@map("user")
 }
 
 model Password {
   hash String
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId String @unique
+  userId String @unique @map("user_id")
+
+  @@map("password")
 }
 
 model TopItem {
   id                String        @id @default(cuid())
-  spotifyId         String
+  spotifyId         String        @map("spotify_id")
   name              String
   user              User          @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId            String
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
-  isCurrentlyRanked Boolean       @default(true)
+  userId            String        @map("user_id")
+  createdAt         DateTime      @default(now()) @map("created_at")
+  updatedAt         DateTime      @updatedAt @map("updated_at")
+  isCurrentlyRanked Boolean       @default(true) @map("is_currently_ranked")
   topItemRanks      TopItemRank[]
-  topItemType       TopItemType
+  topItemType       TopItemType   @map("top_item_type")
   album             String?
   artists           String[]
 
   @@unique([spotifyId, userId, topItemType])
+  @@map("top_item")
 }
 
 enum TopItemType {
   ARTIST
   TRACK
+
+  @@map("top_item_type")
 }
 
 model TopItemRank {
   id           String   @id @default(cuid())
   topItem      TopItem  @relation(fields: [topItemId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  topItemId    String
+  topItemId    String   @map("top_item_id")
   rank         Int
-  previousRank Int?
-  createdAt    DateTime @default(now())
+  previousRank Int?     @map("previous_rank")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("top_item_rank")
 }

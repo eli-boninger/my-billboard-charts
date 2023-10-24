@@ -44,7 +44,7 @@ export const loader = async ({ request }) => {
       return await addSpotifyTokenToSession(
         request,
         json?.access_token,
-        "/home"
+        "/tracks"
       );
     } else {
       return {};

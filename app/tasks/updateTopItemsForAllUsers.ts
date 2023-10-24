@@ -56,10 +56,16 @@ const updateAllUserTopItems = async (id: User["id"], refreshToken: User["spotify
         console.error(e)
     }
 
-    newTracksList.forEach((t, index) => {
-        upsertTopItem(t, index, id, TopItemType.TRACK, topTracks.find(tt => tt.spotifyId === t.id)?.topItemRanks[0]?.rank)
-    })
-    newArtistsList.forEach((a, index) => {
-        upsertTopItem(a, index, id, TopItemType.ARTIST, topArtists.find(ta => ta.spotifyId === a.id)?.topItemRanks[0]?.rank)
-    })
+    try {
+        newTracksList.forEach((t, index) => {
+            upsertTopItem(t, index, id, TopItemType.TRACK, topTracks.find(tt => tt.spotifyId === t.id)?.rank)
+        })
+        newArtistsList.forEach((a, index) => {
+            console.dir(a)
+            upsertTopItem(a, index, id, TopItemType.ARTIST, topArtists.find(ta => ta.spotifyId === a.id)?.rank)
+        })    
+    } catch (e) {
+        console.error(e)
+    }
+
 }

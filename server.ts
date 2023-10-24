@@ -18,7 +18,15 @@ app.use(
   })
 );
 
-cron.schedule("*/30 * * * *", updateTopItemsForAllUsers);
+// cron.schedule("*/30 * * * *", async () => {
+//   try {
+//     await updateTopItemsForAllUsers()
+//   } catch (e) {
+//     console.error(e)
+//   }
+// });
+
+updateTopItemsForAllUsers();
 
 app.use((req, res, next) => {
   // helpful headers:
