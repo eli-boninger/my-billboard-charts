@@ -1,7 +1,8 @@
 import { TopItemType } from "@prisma/client";
-import { SpotifyTopItemsRequestResult, SpotifyTopResultItem } from "~/models/spotifyApiModels";
+import type { SpotifyTopItemsRequestResult, SpotifyTopResultItem } from "~/models/spotifyApiModels";
 import { getTopItemsByUserId, setAllItemsUnranked, upsertTopItem } from "~/models/topItem.server";
-import { User, getAllSpotifyAuthorizedUsers } from "~/models/user.server"
+import type { User} from "~/models/user.server";
+import { getAllSpotifyAuthorizedUsers } from "~/models/user.server"
 
 export const updateTopItemsForAllUsers = async () => {
     console.info("********************************")

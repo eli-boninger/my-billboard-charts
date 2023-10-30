@@ -3,7 +3,7 @@ import { useLoaderData } from "@remix-run/react";
 import { getTopTracks } from "~/services/spotifyService";
 import { requireUserId } from "~/session.server";
 import superjson from "superjson";
-import { TopItemAndRank } from "~/models/topItem.server";
+import type { TopItemAndRank } from "~/models/topItem.server";
 import { TopItemsList } from "~/components/home/TopItemsList";
 
 export const meta: V2_MetaFunction = () => [{ title: "My Billboard Charts" }];

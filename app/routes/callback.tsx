@@ -1,13 +1,9 @@
 import { redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { addUserSpotifyAuth } from "~/models/user.server";
-import {
-  addSpotifyTokenToSession,
-  getSession,
-  requireUserId,
-} from "~/session.server";
+import { addSpotifyTokenToSession, requireUserId } from "~/session.server";
 
-export const loader = async ({ request }) => {
+export const loader = async ({ request }: { request: Request }) => {
   const userId = await requireUserId(request);
   const url = new URL(request.url);
   const state = url.searchParams.get("state");
@@ -53,6 +49,6 @@ export const loader = async ({ request }) => {
 };
 
 export default function Callback() {
-  const loaderData = useLoaderData<typeof loader>();
+  useLoaderData<typeof loader>();
   return <div>Action failed</div>;
 }

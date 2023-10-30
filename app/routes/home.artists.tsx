@@ -1,9 +1,9 @@
 import { type V2_MetaFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { getTopArtists, getTopTracks } from "~/services/spotifyService";
+import { getTopArtists } from "~/services/spotifyService";
 import { requireUserId } from "~/session.server";
 import superjson from "superjson";
-import { TopItemAndRank } from "~/models/topItem.server";
+import type { TopItemAndRank } from "~/models/topItem.server";
 import { TopItemsList } from "~/components/home/TopItemsList";
 
 export const meta: V2_MetaFunction = () => [{ title: "My Billboard Charts" }];

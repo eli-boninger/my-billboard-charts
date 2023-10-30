@@ -1,5 +1,5 @@
 import { List } from "@mui/material";
-import { TopItemAndRank } from "~/models/topItem.server";
+import type { TopItemAndRank } from "~/models/topItem.server";
 import { TopItemsListItem } from "./TopItemsListItem";
 
 interface Props {

@@ -1,5 +1,5 @@
 import { ListItem, ListItemButton, ListItemText } from "@mui/material";
-import { TopItemAndRank } from "~/models/topItem.server";
+import type { TopItemAndRank } from "~/models/topItem.server";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
@@ -10,7 +10,7 @@ interface Props {
 export const TopItemsListItem = (props: Props) => {
   const { topItem } = props;
   const labelId = `list-item-label-${topItem.id}`;
-  const rankChange = !!topItem.previousRank
+  const rankChange = topItem.previousRank
     ? topItem.rank - topItem.previousRank
     : null;
 

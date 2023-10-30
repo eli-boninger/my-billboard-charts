@@ -1,5 +1,6 @@
 import { TopItemType } from "@prisma/client";
-import { TopItemAndRank, getTopItemsByUserId } from "~/models/topItem.server";
+import type { TopItemAndRank} from "~/models/topItem.server";
+import { getTopItemsByUserId } from "~/models/topItem.server";
 import { addSpotifyTokenToSession, getSpotifySession, requireUser } from "~/session.server";
 
 const refreshAccessToken = async (request: Request) => {

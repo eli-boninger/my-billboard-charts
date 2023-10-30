@@ -1,7 +1,8 @@
 
 import { prisma } from "~/db.server";
-import { SpotifyTopResultItem } from "./spotifyApiModels";
-import { type User, type TopItem, TopItemType, TopItemRank, Prisma } from "@prisma/client";
+import type { SpotifyTopResultItem } from "./spotifyApiModels";
+import { TopItemType, Prisma } from "@prisma/client";
+import type { TopItemRank, User, TopItem } from "@prisma/client";
 import camelize from "camelize"
 
 export type TopItemAndRank =
