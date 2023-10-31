@@ -1,4 +1,4 @@
-app = "my-billboard-charts-0fa0"
+app = "my-billboard-charts"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = [ ]
